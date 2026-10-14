@@ -170,6 +170,9 @@ footer.py-4 {
 
 
 
+
+
+
 /* styles.css - Exact Replica of learner.saveetha.in */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -201,7 +204,7 @@ body {
     width: 225px;
     overflow-y: auto;
     background-color: var(--sb-sidenav-dark-bg);
-    transition: transform 0.15s ease-in-out; /* Exact transition speed */
+    transition: transform 0.15s ease-in-out;
     z-index: 1038;
 }
 
@@ -322,7 +325,7 @@ body {
 
 /* --- CARD & UTILITY OVERRIDES --- */
 .card {
-    border: 1px solid rgba(0,0,0,0.08); border-radius: 0.5rem; /* Slightly rounder corners */
+    border: 1px solid rgba(0,0,0,0.08); border-radius: 0.5rem;
     background-color: #fff; margin-bottom: 1.5rem;
     box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.05);
 }
