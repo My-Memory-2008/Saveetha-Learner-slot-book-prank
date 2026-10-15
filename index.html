@@ -1148,10 +1148,10 @@
 
 
 
-                document.addEventListener('DOMContentLoaded', () => {
-    // 1. Define your schedule here
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. CONFIGURATION: Set your event times here (24-hour format)
     const SCHEDULE = {
-        start: '20:28',
+        start: '09:45',
         end: '11:14'
     };
 
@@ -1161,22 +1161,24 @@
         const currentMinutes = now.getMinutes();
         const currentTimeInMinutes = (currentHours * 60) + currentMinutes;
 
-        // Parse schedule times
+        // Parse schedule times into minutes for comparison
         const [startH, startM] = SCHEDULE.start.split(':').map(Number);
         const startTimeInMinutes = (startH * 60) + startM;
 
         const [endH, endM] = SCHEDULE.end.split(':').map(Number);
         const endTimeInMinutes = (endH * 60) + endM;
 
-        // Get DOM elements
+        // Get DOM elements by ID for precision
+        const badgeStarted = document.getElementById('badge-event-started');
+        const badgeInOtp = document.getElementById('badge-in-otp');
+        
         const items = document.querySelectorAll('.timeline-item');
-        const firstItem = items[0]; // Event Started
-        const secondItem = items[1]; // IN OTP Entry
+        const firstItem = items[0]; 
+        const secondItem = items[1]; 
         
         const firstDot = firstItem ? firstItem.querySelector('.timeline-dot') : null;
         const firstTitle = firstItem ? firstItem.querySelector('.fw-semibold') : null;
-        const firstBadge = firstItem ? firstItem.querySelector('.badge') : null; // The "Pending" badge
-
+        
         const secondDot = secondItem ? secondItem.querySelector('.timeline-dot') : null;
         const secondTitle = secondItem ? secondItem.querySelector('.fw-semibold') : null;
 
@@ -1184,52 +1186,49 @@
         if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
             
             // --- UPDATE FIRST ITEM (Event Started) ---
+            // 1. Turn Dot Green
             if (firstDot) {
-                firstDot.classList.remove('current'); // Stop blinking
-                firstDot.classList.add('completed');  // Turn Green
+                firstDot.classList.remove('current'); 
+                firstDot.classList.add('completed');  
             }
+            // 2. Turn Text Green (Force inline style to override CSS)
             if (firstTitle) {
                 firstTitle.classList.remove('text-primary');
-                firstTitle.classList.add('text-success'); // Turn text Green
+                firstTitle.classList.add('text-success'); 
+                firstTitle.style.color = '#198754'; 
             }
-            
-            // HIDE THE PENDING BADGE ON FIRST ITEM
-            if (firstBadge) {
-                firstBadge.style.display = 'none'; 
+            // 3. HIDE the "Pending" badge on first item
+            if (badgeStarted) {
+                badgeStarted.style.display = 'none'; 
             }
 
             // --- UPDATE SECOND ITEM (IN OTP Entry) ---
+            // 1. Turn Dot Blue & Blinking
             if (secondDot) {
-                // Force it to be the active blue blinking dot
                 secondDot.classList.add('current'); 
-                secondDot.classList.remove('completed'); // Ensure it stays Blue
+                secondDot.classList.remove('completed'); 
             }
-            
+            // 2. Turn Text Blue (Force inline style)
             if (secondTitle) {
-                // Force text to be Blue
                 secondTitle.classList.remove('text-success');
                 secondTitle.classList.add('text-primary');
                 secondTitle.style.color = '#0d6efd'; 
             }
-
-            // MOVE PENDING BADGE TO SECOND ITEM
-            // We check if the badge exists and isn't already inside the second item
-            if (firstBadge && secondItem) {
-                // If badge is currently in first item, move it to second
-                if (firstBadge.parentElement === firstItem.querySelector('div')) {
-                    secondItem.querySelector('div').appendChild(firstBadge);
-                    firstBadge.style.display = 'inline-block'; // Make sure it's visible again
-                }
+            // 3. SHOW the "Pending" badge on second item
+            if (badgeInOtp) {
+                badgeInOtp.style.display = 'inline-block'; 
             }
 
         } else if (currentTimeInMinutes >= endTimeInMinutes) {
-            // Event Finished Logic (Optional: Turn everything green)
+            // Event Finished Logic: Everything turns green/completed
              if (firstDot) firstDot.classList.add('completed');
              if (secondDot) {
                  secondDot.classList.remove('current');
                  secondDot.classList.add('completed');
              }
-             if (firstBadge) firstBadge.style.display = 'none'; // Hide pending when done
+             // Hide both pending badges when event is over
+             if (badgeStarted) badgeStarted.style.display = 'none';
+             if (badgeInOtp) badgeInOtp.style.display = 'none';
         }
     }
 
@@ -1239,6 +1238,7 @@
     // Run every 10 seconds to check for time changes
     setInterval(updateTimeline, 10000);
 });
+                
         </script>
         
     
