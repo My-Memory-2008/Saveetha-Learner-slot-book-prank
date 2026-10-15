@@ -1068,6 +1068,80 @@
                 document.getElementById('sidebarToggle').addEventListener('click', function() {
     document.body.classList.toggle('sb-nav-collapsed');
 });
+
+
+
+
+                document.addEventListener('DOMContentLoaded', () => {
+    // 1. Define your schedule here (24-hour format)
+    const SCHEDULE = {
+        start: '20:15',
+        end: '21:15'
+    };
+
+    function updateTimeline() {
+        const now = new Date();
+        const currentHours = now.getHours();
+        const currentMinutes = now.getMinutes();
+        const currentTimeInMinutes = (currentHours * 60) + currentMinutes;
+
+        // Parse schedule times into minutes for easy comparison
+        const [startH, startM] = SCHEDULE.start.split(':').map(Number);
+        const startTimeInMinutes = (startH * 60) + startM;
+
+        const [endH, endM] = SCHEDULE.end.split(':').map(Number);
+        const endTimeInMinutes = (endH * 60) + endM;
+
+        // Get DOM elements
+        const dotCurrent = document.querySelector('.timeline-dot.current');
+        const titleCurrent = document.querySelector('.timeline-item .text-primary'); // Assuming first item has text-primary
+        
+        // LOGIC: Check if event has started but not finished
+        if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
+            
+            // A. Change the FIRST dot from Blue Blinking -> Solid Green
+            if (dotCurrent) {
+                dotCurrent.classList.remove('current');
+                dotCurrent.classList.add('completed');
+            }
+
+            // B. Change the text color from Blue -> Green
+            if (titleCurrent) {
+                titleCurrent.classList.remove('text-primary');
+                titleCurrent.classList.add('text-success');
+            }
+
+            // C. OPTIONAL: Make the NEXT dot blink blue (IN OTP Entry)
+            // Find the second timeline item
+            const nextItem = document.querySelectorAll('.timeline-item')[1]; 
+            if (nextItem) {
+                const nextDot = nextItem.querySelector('.timeline-dot');
+                const nextTitle = nextItem.querySelector('.fw-semibold');
+                
+                if (nextDot && !nextDot.classList.contains('completed')) {
+                    nextDot.classList.add('current');
+                }
+                if (nextTitle) {
+                    nextTitle.style.color = '#0d6efd'; // Force blue
+                    nextTitle.style.fontWeight = '600';
+                }
+            }
+
+        } else if (currentTimeInMinutes >= endTimeInMinutes) {
+            // Event Finished: Make everything green
+             if (dotCurrent) {
+                dotCurrent.classList.remove('current');
+                dotCurrent.classList.add('completed');
+            }
+        }
+    }
+
+    // Run immediately on load
+    updateTimeline();
+
+    // Run every 10 seconds to check for time changes
+    setInterval(updateTimeline, 10000);
+});
         </script>
         
     
