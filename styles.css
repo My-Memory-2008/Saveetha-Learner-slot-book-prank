@@ -592,9 +592,9 @@ footer.py-4 {
 
 
 
+/* styles.css - FINAL FIX FOR DARK SIDEBAR */
 
-
-/* styles.css - FINAL VERSION */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
     --sb-sidenav-dark-bg: #212529 !important;
@@ -606,8 +606,7 @@ footer.py-4 {
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    /* FORCE INTER FONT - OVERRIDE BOOTSTRAP'S SYSTEM FONT */
-    font-family: 'Inter', system-ui, -apple-system, sans-serif !important; 
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     background-color: #f8f9fa !important;
     color: #212529;
     overflow-x: hidden;
@@ -620,17 +619,20 @@ body {
     width: 100%;
 }
 
-#layoutSidenav_nav {
+/* CRITICAL FIX: Force dark background on sidebar */
+#layoutSidenav_nav,
+#layoutSidenav_nav.sb-sidenav-dark,
+nav.sb-sidenav.sb-sidenav-dark {
     flex-basis: 225px !important;
     flex-shrink: 0 !important;
     position: fixed !important;
     top: 56px !important; 
     bottom: 0 !important; 
     left: 0 !important;
-    width: 225px !important; /* SHOULD SHOW 225PX IN COMPUTED TAB NOW */
+    width: 225px !important;
     overflow-y: auto !important;
-    background-color: var(--sb-sidenav-dark-bg) !important; 
-    color: var(--sb-sidenav-dark-color) !important; /* SHOULD SHOW RGBA WHITE NOW */
+    background-color: #212529 !important; /* FORCE DARK */
+    color: rgba(255, 255, 255, 0.5) !important; /* FORCE SEMI-TRANSPARENT WHITE TEXT */
     transition: transform 0.15s ease-in-out !important;
     z-index: 1038 !important;
     display: flex !important;
@@ -648,6 +650,7 @@ body {
     background-color: #f8f9fa !important;
 }
 
+/* Toggle States */
 .sb-nav-collapsed #layoutSidenav_nav { transform: translateX(-225px) !important; }
 .sb-nav-collapsed #layoutSidenav_content { margin-left: 0 !important; width: 100% !important; }
 
@@ -713,11 +716,13 @@ body {
     letter-spacing: 0.05em !important;
 }
 
-.sb-sidenav .nav-link {
+/* Force white semi-transparent text on nav links */
+.sb-sidenav .nav-link,
+#layoutSidenav_nav .nav-link {
     display: flex !important; 
     align-items: center !important; 
     padding: 0.6rem 1rem !important; 
-    color: var(--sb-sidenav-dark-color) !important; 
+    color: rgba(255, 255, 255, 0.5) !important; /* FORCE SEMI-TRANSPARENT WHITE */
     text-decoration: none !important;
     font-size: 0.875rem !important; 
     transition: all 0.15s ease !important;
@@ -725,13 +730,15 @@ body {
     gap: 0.75rem !important; 
 }
 
-.sb-sidenav .nav-link:hover {
-    color: var(--sb-sidenav-dark-active-color) !important;
+.sb-sidenav .nav-link:hover,
+#layoutSidenav_nav .nav-link:hover {
+    color: #fff !important;
     background-color: rgba(255,255,255,0.05) !important;
 }
 
-.sb-sidenav .nav-link.active {
-    color: var(--sb-sidenav-dark-active-color) !important;
+.sb-sidenav .nav-link.active,
+#layoutSidenav_nav .nav-link.active {
+    color: #fff !important;
     font-weight: 600 !important;
 }
 
@@ -757,11 +764,12 @@ body {
     line-height: 1 !important;
 }
 
-/* --- SIDEBAR PROFILE FOOTER --- */
-.sidebar-profile-footer {
+/* --- SIDEBAR PROFILE FOOTER (FIXED VISIBILITY & COLOR) --- */
+.sidebar-profile-footer,
+#layoutSidenav_nav .sidebar-profile-footer {
     padding: 1.25rem 1rem !important; 
     border-top: 1px solid rgba(255,255,255,0.1) !important;
-    background-color: rgba(0,0,0,0.2) !important; 
+    background-color: rgba(0,0,0,0.2) !important; /* DARKER OVERLAY */
     margin-top: auto !important;
     width: 100% !important;
 }
