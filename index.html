@@ -301,7 +301,7 @@
                     </div>
                     
                     <div class="small text-muted">
-                        Thu, 15 Oct 2026 | 20:15 AM – 21:15 AM
+                        Thu, 15 Oct 2026 | 20:27 AM – 21:15 AM
                     </div>
                     
                     <div class="small text-muted">
@@ -375,7 +375,7 @@
                         
                             
                                 <span class="small text-muted d-block">
-                                    Scheduled at 09:45 AM – 11:14 AM
+                                    Scheduled at 20:27 AM – 11:14 AM
                                 </span>
                             
                         
@@ -1072,11 +1072,87 @@
 
 
 
+//                 document.addEventListener('DOMContentLoaded', () => {
+//     // 1. Define your schedule here (24-hour format)
+//     const SCHEDULE = {
+//         start: '20:15',
+//         end: '21:15'
+//     };
+
+//     function updateTimeline() {
+//         const now = new Date();
+//         const currentHours = now.getHours();
+//         const currentMinutes = now.getMinutes();
+//         const currentTimeInMinutes = (currentHours * 60) + currentMinutes;
+
+//         // Parse schedule times into minutes for easy comparison
+//         const [startH, startM] = SCHEDULE.start.split(':').map(Number);
+//         const startTimeInMinutes = (startH * 60) + startM;
+
+//         const [endH, endM] = SCHEDULE.end.split(':').map(Number);
+//         const endTimeInMinutes = (endH * 60) + endM;
+
+//         // Get DOM elements
+//         const dotCurrent = document.querySelector('.timeline-dot.current');
+//         const titleCurrent = document.querySelector('.timeline-item .text-primary'); // Assuming first item has text-primary
+        
+//         // LOGIC: Check if event has started but not finished
+//         if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
+            
+//             // A. Change the FIRST dot from Blue Blinking -> Solid Green
+//             if (dotCurrent) {
+//                 dotCurrent.classList.remove('current');
+//                 dotCurrent.classList.add('completed');
+//             }
+
+//             // B. Change the text color from Blue -> Green
+//             if (titleCurrent) {
+//                 titleCurrent.classList.remove('text-primary');
+//                 titleCurrent.classList.add('text-success');
+//             }
+
+//             // C. OPTIONAL: Make the NEXT dot blink blue (IN OTP Entry)
+//             // Find the second timeline item
+//             const nextItem = document.querySelectorAll('.timeline-item')[1]; 
+//             if (nextItem) {
+//                 const nextDot = nextItem.querySelector('.timeline-dot');
+//                 const nextTitle = nextItem.querySelector('.fw-semibold');
+                
+//                 if (nextDot && !nextDot.classList.contains('completed')) {
+//                     nextDot.classList.add('current');
+//                 }
+//                 if (nextTitle) {
+//                     nextTitle.style.color = '#0d6efd'; // Force blue
+//                     nextTitle.style.fontWeight = '600';
+//                 }
+//             }
+
+//         } else if (currentTimeInMinutes >= endTimeInMinutes) {
+//             // Event Finished: Make everything green
+//              if (dotCurrent) {
+//                 dotCurrent.classList.remove('current');
+//                 dotCurrent.classList.add('completed');
+//             }
+//         }
+//     }
+
+//     // Run immediately on load
+//     updateTimeline();
+
+//     // Run every 10 seconds to check for time changes
+//     setInterval(updateTimeline, 10000);
+// });
+
+
+
+
+
+
                 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Define your schedule here (24-hour format)
+    // 1. Define your schedule here
     const SCHEDULE = {
-        start: '20:15',
-        end: '21:15'
+        start: '09:45',
+        end: '11:14'
     };
 
     function updateTimeline() {
@@ -1085,7 +1161,7 @@
         const currentMinutes = now.getMinutes();
         const currentTimeInMinutes = (currentHours * 60) + currentMinutes;
 
-        // Parse schedule times into minutes for easy comparison
+        // Parse schedule times
         const [startH, startM] = SCHEDULE.start.split(':').map(Number);
         const startTimeInMinutes = (startH * 60) + startM;
 
@@ -1093,46 +1169,67 @@
         const endTimeInMinutes = (endH * 60) + endM;
 
         // Get DOM elements
-        const dotCurrent = document.querySelector('.timeline-dot.current');
-        const titleCurrent = document.querySelector('.timeline-item .text-primary'); // Assuming first item has text-primary
+        const items = document.querySelectorAll('.timeline-item');
+        const firstItem = items[0]; // Event Started
+        const secondItem = items[1]; // IN OTP Entry
         
+        const firstDot = firstItem ? firstItem.querySelector('.timeline-dot') : null;
+        const firstTitle = firstItem ? firstItem.querySelector('.fw-semibold') : null;
+        const firstBadge = firstItem ? firstItem.querySelector('.badge') : null; // The "Pending" badge
+
+        const secondDot = secondItem ? secondItem.querySelector('.timeline-dot') : null;
+        const secondTitle = secondItem ? secondItem.querySelector('.fw-semibold') : null;
+
         // LOGIC: Check if event has started but not finished
         if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
             
-            // A. Change the FIRST dot from Blue Blinking -> Solid Green
-            if (dotCurrent) {
-                dotCurrent.classList.remove('current');
-                dotCurrent.classList.add('completed');
+            // --- UPDATE FIRST ITEM (Event Started) ---
+            if (firstDot) {
+                firstDot.classList.remove('current'); // Stop blinking
+                firstDot.classList.add('completed');  // Turn Green
+            }
+            if (firstTitle) {
+                firstTitle.classList.remove('text-primary');
+                firstTitle.classList.add('text-success'); // Turn text Green
+            }
+            
+            // HIDE THE PENDING BADGE ON FIRST ITEM
+            if (firstBadge) {
+                firstBadge.style.display = 'none'; 
             }
 
-            // B. Change the text color from Blue -> Green
-            if (titleCurrent) {
-                titleCurrent.classList.remove('text-primary');
-                titleCurrent.classList.add('text-success');
+            // --- UPDATE SECOND ITEM (IN OTP Entry) ---
+            if (secondDot) {
+                // Force it to be the active blue blinking dot
+                secondDot.classList.add('current'); 
+                secondDot.classList.remove('completed'); // Ensure it stays Blue
+            }
+            
+            if (secondTitle) {
+                // Force text to be Blue
+                secondTitle.classList.remove('text-success');
+                secondTitle.classList.add('text-primary');
+                secondTitle.style.color = '#0d6efd'; 
             }
 
-            // C. OPTIONAL: Make the NEXT dot blink blue (IN OTP Entry)
-            // Find the second timeline item
-            const nextItem = document.querySelectorAll('.timeline-item')[1]; 
-            if (nextItem) {
-                const nextDot = nextItem.querySelector('.timeline-dot');
-                const nextTitle = nextItem.querySelector('.fw-semibold');
-                
-                if (nextDot && !nextDot.classList.contains('completed')) {
-                    nextDot.classList.add('current');
-                }
-                if (nextTitle) {
-                    nextTitle.style.color = '#0d6efd'; // Force blue
-                    nextTitle.style.fontWeight = '600';
+            // MOVE PENDING BADGE TO SECOND ITEM
+            // We check if the badge exists and isn't already inside the second item
+            if (firstBadge && secondItem) {
+                // If badge is currently in first item, move it to second
+                if (firstBadge.parentElement === firstItem.querySelector('div')) {
+                    secondItem.querySelector('div').appendChild(firstBadge);
+                    firstBadge.style.display = 'inline-block'; // Make sure it's visible again
                 }
             }
 
         } else if (currentTimeInMinutes >= endTimeInMinutes) {
-            // Event Finished: Make everything green
-             if (dotCurrent) {
-                dotCurrent.classList.remove('current');
-                dotCurrent.classList.add('completed');
-            }
+            // Event Finished Logic (Optional: Turn everything green)
+             if (firstDot) firstDot.classList.add('completed');
+             if (secondDot) {
+                 secondDot.classList.remove('current');
+                 secondDot.classList.add('completed');
+             }
+             if (firstBadge) firstBadge.style.display = 'none'; // Hide pending when done
         }
     }
 
