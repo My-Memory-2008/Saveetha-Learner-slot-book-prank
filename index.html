@@ -1148,11 +1148,12 @@
 
 
 
-document.addEventListener('DOMContentLoaded', () => {
+
+                document.addEventListener('DOMContentLoaded', () => {
     // 1. CONFIGURATION: Set your event times here (24-hour format)
     const SCHEDULE = {
-        start: '21:47',
-        end: '11:14'
+        start: '09:45', // Event Start Time
+        end: '11:14'    // Event End Time
     };
 
     function updateTimeline() {
@@ -1168,13 +1169,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const [endH, endM] = SCHEDULE.end.split(':').map(Number);
         const endTimeInMinutes = (endH * 60) + endM;
 
-        // Get DOM elements by ID for precision
+        // Get DOM elements by ID
         const badgeStarted = document.getElementById('badge-event-started');
         const badgeInOtp = document.getElementById('badge-in-otp');
         
         const items = document.querySelectorAll('.timeline-item');
-        const firstItem = items[0]; 
-        const secondItem = items[1]; 
+        const firstItem = items[0]; // "Event Started"
+        const secondItem = items[1]; // "IN OTP Entry"
         
         const firstDot = firstItem ? firstItem.querySelector('.timeline-dot') : null;
         const firstTitle = firstItem ? firstItem.querySelector('.fw-semibold') : null;
@@ -1182,39 +1183,45 @@ document.addEventListener('DOMContentLoaded', () => {
         const secondDot = secondItem ? secondItem.querySelector('.timeline-dot') : null;
         const secondTitle = secondItem ? secondItem.querySelector('.fw-semibold') : null;
 
-        // LOGIC: Check if event has started but not finished
+        // LOGIC: Check if current time is AFTER start time but BEFORE end time
         if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
             
-            // --- UPDATE FIRST ITEM (Event Started) ---
-            // 1. Turn Dot Green
+            // --- 1. UPDATE FIRST ITEM ("Event Started") -> MAKE IT GREEN/COMPLETED ---
+            
+            // Turn Dot Green
             if (firstDot) {
-                firstDot.classList.remove('current'); 
-                firstDot.classList.add('completed');  
+                firstDot.classList.remove('current'); // Stop blinking blue
+                firstDot.classList.add('completed');  // Make solid green
             }
-            // 2. Turn Text Green (Force inline style to override CSS)
+            
+            // Turn Text Green
             if (firstTitle) {
                 firstTitle.classList.remove('text-primary');
                 firstTitle.classList.add('text-success'); 
-                firstTitle.style.color = '#198754'; 
+                firstTitle.style.color = '#198754'; // Force green inline
             }
-            // 3. HIDE the "Pending" badge on first item
+            
+            // HIDE the "Pending" badge on first item
             if (badgeStarted) {
                 badgeStarted.style.display = 'none'; 
             }
 
-            // --- UPDATE SECOND ITEM (IN OTP Entry) ---
-            // 1. Turn Dot Blue & Blinking
+            // --- 2. UPDATE SECOND ITEM ("IN OTP Entry") -> MAKE IT BLUE/ACTIVE ---
+            
+            // Turn Dot Blue & Blinking
             if (secondDot) {
-                secondDot.classList.add('current'); 
-                secondDot.classList.remove('completed'); 
+                secondDot.classList.add('current');   // Make blinking blue
+                secondDot.classList.remove('completed'); // Ensure it's NOT green
             }
-            // 2. Turn Text Blue (Force inline style)
+            
+            // Turn Text Blue
             if (secondTitle) {
                 secondTitle.classList.remove('text-success');
                 secondTitle.classList.add('text-primary');
-                secondTitle.style.color = '#0d6efd'; 
+                secondTitle.style.color = '#0d6efd'; // Force blue inline
             }
-            // 3. SHOW the "Pending" badge on second item
+            
+            // SHOW the "Pending" badge on second item
             if (badgeInOtp) {
                 badgeInOtp.style.display = 'inline-block'; 
             }
@@ -1238,6 +1245,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Run every 10 seconds to check for time changes
     setInterval(updateTimeline, 10000);
 });
+
                 
         </script>
         
