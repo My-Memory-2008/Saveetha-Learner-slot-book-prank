@@ -591,13 +591,12 @@ footer.py-4 {
 
 
 
-
-/* styles.css - FINAL FIX FOR DARK SIDEBAR */
+/* styles.css - FINAL PIXEL-PERFECT FIX */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --sb-sidenav-dark-bg: #212529 !important;
+    --sb-sidenav-dark-bg: #212529;
     --sb-sidenav-dark-color: rgba(255, 255, 255, 0.5);
     --sb-sidenav-dark-active-color: #fff;
     --timeline-line-color: #dee2e6;
@@ -619,10 +618,7 @@ body {
     width: 100%;
 }
 
-/* CRITICAL FIX: Force dark background on sidebar */
-#layoutSidenav_nav,
-#layoutSidenav_nav.sb-sidenav-dark,
-nav.sb-sidenav.sb-sidenav-dark {
+#layoutSidenav_nav {
     flex-basis: 225px !important;
     flex-shrink: 0 !important;
     position: fixed !important;
@@ -631,8 +627,8 @@ nav.sb-sidenav.sb-sidenav-dark {
     left: 0 !important;
     width: 225px !important;
     overflow-y: auto !important;
-    background-color: #212529 !important; /* FORCE DARK */
-    color: rgba(255, 255, 255, 0.5) !important; /* FORCE SEMI-TRANSPARENT WHITE TEXT */
+    background-color: #212529 !important;
+    color: rgba(255, 255, 255, 0.5) !important;
     transition: transform 0.15s ease-in-out !important;
     z-index: 1038 !important;
     display: flex !important;
@@ -650,7 +646,6 @@ nav.sb-sidenav.sb-sidenav-dark {
     background-color: #f8f9fa !important;
 }
 
-/* Toggle States */
 .sb-nav-collapsed #layoutSidenav_nav { transform: translateX(-225px) !important; }
 .sb-nav-collapsed #layoutSidenav_content { margin-left: 0 !important; width: 100% !important; }
 
@@ -707,22 +702,22 @@ nav.sb-sidenav.sb-sidenav-dark {
 /* --- SIDEBAR NAVIGATION --- */
 .sb-sidenav-menu { flex-grow: 1 !important; }
 
+/* FIX: Dimmer section headings */
 .sb-sidenav-menu-heading {
     padding: 1.75rem 1rem 0.75rem !important; 
     font-size: 0.7rem !important; 
     font-weight: 700 !important;
     text-transform: uppercase !important; 
-    color: rgba(255, 255, 255, 0.25) !important;
+    color: rgba(255, 255, 255, 0.25) !important; /* MORE DIM */
     letter-spacing: 0.05em !important;
 }
 
-/* Force white semi-transparent text on nav links */
-.sb-sidenav .nav-link,
-#layoutSidenav_nav .nav-link {
+/* FIX: Muted nav link color */
+.sb-sidenav .nav-link {
     display: flex !important; 
     align-items: center !important; 
     padding: 0.6rem 1rem !important; 
-    color: rgba(255, 255, 255, 0.5) !important; /* FORCE SEMI-TRANSPARENT WHITE */
+    color: rgba(255, 255, 255, 0.5) !important; /* MUTED WHITE */
     text-decoration: none !important;
     font-size: 0.875rem !important; 
     transition: all 0.15s ease !important;
@@ -730,14 +725,12 @@ nav.sb-sidenav.sb-sidenav-dark {
     gap: 0.75rem !important; 
 }
 
-.sb-sidenav .nav-link:hover,
-#layoutSidenav_nav .nav-link:hover {
-    color: #fff !important;
+.sb-sidenav .nav-link:hover {
+    color: rgba(255, 255, 255, 0.75) !important; /* SLIGHTLY BRIGHTER ON HOVER */
     background-color: rgba(255,255,255,0.05) !important;
 }
 
-.sb-sidenav .nav-link.active,
-#layoutSidenav_nav .nav-link.active {
+.sb-sidenav .nav-link.active {
     color: #fff !important;
     font-weight: 600 !important;
 }
@@ -764,14 +757,14 @@ nav.sb-sidenav.sb-sidenav-dark {
     line-height: 1 !important;
 }
 
-/* --- SIDEBAR PROFILE FOOTER (FIXED VISIBILITY & COLOR) --- */
-.sidebar-profile-footer,
-#layoutSidenav_nav .sidebar-profile-footer {
+/* --- SIDEBAR PROFILE FOOTER (FIXED VISIBILITY) --- */
+.sidebar-profile-footer {
     padding: 1.25rem 1rem !important; 
     border-top: 1px solid rgba(255,255,255,0.1) !important;
-    background-color: rgba(0,0,0,0.2) !important; /* DARKER OVERLAY */
+    background-color: rgba(0,0,0,0.3) !important; /* SLIGHTLY DARKER */
     margin-top: auto !important;
     width: 100% !important;
+    flex-shrink: 0 !important; /* PREVENTS CUTTING OFF */
 }
 
 .sidebar-profile-row { 
@@ -866,6 +859,7 @@ h4.text-center.fw-semibold.mb-4 {
 }
 .timeline-item:last-child { padding-bottom: 0 !important; }
 
+/* FIX: Removed white border from dots */
 .timeline-dot {
     position: absolute !important; 
     left: 6px !important; 
@@ -875,7 +869,7 @@ h4.text-center.fw-semibold.mb-4 {
     border-radius: 50% !important;
     background-color: #adb5bd !important; 
     z-index: 2 !important; 
-    border: 2px solid #fff !important;
+    border: none !important; /* NO WHITE BORDER */
 }
 .timeline-dot.completed { background-color: #198754 !important; }
 .timeline-dot.current {
