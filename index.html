@@ -44,7 +44,11 @@
         <link href="/static/people/sidebar_profile.css" rel="stylesheet">
         <link href="/static/vendor/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
         <script src="/static/vendor/fontawesome/js/all.js" crossorigin="anonymous"></script>
-    <script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script></head>
+    <script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script>
+<script src="https://unpkg.com"></script>
+
+
+</head>
     <body class="sb-nav-fixed" data-sidebar-active-path="">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
@@ -1070,6 +1074,17 @@
 });
 
 
+
+
+
+
+
+                const ptr = PullToRefresh.init({
+    mainElement: 'body', // The element you pull down
+    onRefresh() {
+      window.location.reload(); // Reloads your Cloudflare Pages site smoothly
+    }
+  });
 
 
 //                 document.addEventListener('DOMContentLoaded', () => {
