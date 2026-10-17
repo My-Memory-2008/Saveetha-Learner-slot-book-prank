@@ -24,14 +24,17 @@ jobs:
         with:
           java-version: '21'
           distribution: 'zulu'
+          cache: 'gradle' # Automatically caches gradle dependencies for faster future builds
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      # FIX: This line auto-accepts the microxr and all other Android SDK licenses
-      - name: Accept Android SDK Licenses
+      # FIX: Use official actions/setup-java paired with environment hooks to accept licenses natively
+      - name: Accept Android SDK Licenses Natively
         run: |
-          yes | sdkmanager --licenses
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+
+      # Capacitor needs the build-tools and platform targets available
+      - name: Install Required Android Components
+        run: |
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
       - name: Install Project Dependencies
         run: npm install
