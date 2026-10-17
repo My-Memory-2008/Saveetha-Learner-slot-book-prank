@@ -13,16 +13,14 @@
 
 
 
-
-
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout 
     xmlns:android="http://android.com"
     xmlns:app="http://android.com"
     xmlns:tools="http://android.com"
     android:id="@+id/swipe_container"
-    android:layout_width="match_index"
-    android:layout_height="match_index"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".MainActivity">
 
     <com.getcapacitor.BridgeWebView
