@@ -1,0 +1,9 @@
+{
+  "appId": "com.mycompany.app",
+  "appName": "My App",
+  "webDir": "www",
+  "server": {
+    "url": "https://saveetha-learner-slot-book-prank.pages.dev/",
+    "cleartext": true
+  }
+}
