@@ -51,23 +51,7 @@
 
 
 
-        <style>
-  /* Styles for the pull-to-refresh loading element */
-  .ptr--ptr {
-    box-shadow: none !important;
-    background: transparent !important;
-  }
-  .ptr--icon {
-    color: #007aff !important; /* Change to your app's primary color */
-    font-size: 24px !important;
-  }
-  .ptr--text {
-    color: #666 !important;
-    font-size: 14px !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  }
-</style>
-
+       
 
 
 </head>
@@ -1100,28 +1084,6 @@
 
 
 
-
-
-                <!-- Load the lightweight PullToRefresh library -->
-<script src="https://unpkg.com"></script>
-
-<script>
-  // Initialize the pull-to-refresh behavior
-  PullToRefresh.init({
-    mainElement: 'body', 
-    onRefresh() {
-      // Smoothly reloads your live Cloudflare website inside the Android app
-      window.location.reload(); 
-    },
-    distThreshold: 60, // How far down the user must pull to trigger a refresh
-    distMax: 90,       // Maximum pull down distance limit
-    iconArrow: '&#8595;', // Down arrow icon
-    iconRefreshing: '&#8635;', // Loading spinner icon
-    instructionsPullToRefresh: 'Pull down to refresh',
-    instructionsReleaseToRefresh: 'Release to refresh',
-    instructionsRefreshing: 'Refreshing...'
-  });
-</script>
 
 
 
