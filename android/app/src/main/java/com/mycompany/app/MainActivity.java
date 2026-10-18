@@ -1,6 +1,7 @@
 package com.mycompany.app;
 
 import android.os.Bundle;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.getcapacitor.BridgeActivity;
@@ -11,19 +12,28 @@ public class MainActivity extends BridgeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        // 1. Force the app to load your custom activity_main layout instead of Capacitor defaults
-        setContentView(R.layout.activity_main);
 
-        // 2. Safely grab the exact components from your custom XML template
-        swipeRefreshLayout = findViewById(R.id.swipe_container);
-        WebView webView = findViewById(R.id.webview);
+        // 1. Safely grab Capacitor's running WebView instance
+        final WebView webView = this.bridge.getWebView();
 
-        if (swipeRefreshLayout != null && webView != null) {
-            // 3. Initialize the core web bridge onto your layout's specific WebView
-            this.init(savedInstanceState, webView);
+        if (webView != null) {
+            // 2. Programmatically generate a SwipeRefreshLayout container at runtime
+            swipeRefreshLayout = new SwipeRefreshLayout(this);
+            swipeRefreshLayout.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+            ));
 
-            // 4. Configure the pull down action to trigger page reloads
+            // 3. Detach the WebView from its default structural location and nest it inside our refresher
+            ViewGroup parentView = (ViewGroup) webView.getParent();
+            if (parentView != null) {
+                int index = parentView.indexOfChild(webView);
+                parentView.removeView(webView);
+                swipeRefreshLayout.addView(webView);
+                parentView.addView(swipeRefreshLayout, index);
+            }
+
+            // 4. Configure the pull-down action to reload your Cloudflare site
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
@@ -31,7 +41,7 @@ public class MainActivity extends BridgeActivity {
                 }
             });
 
-            // 5. Hide the spinning animation smoothly when Cloudflare finishes loading
+            // 5. Turn off the spinner wheel animation smoothly when loading completes
             webView.setWebViewClient(new android.webkit.WebViewClient() {
                 @Override
                 public void onPageFinished(WebView view, String url) {
@@ -42,8 +52,6 @@ public class MainActivity extends BridgeActivity {
         }
     }
 }
-
-
 
 
 // package com.mycompany.app;
