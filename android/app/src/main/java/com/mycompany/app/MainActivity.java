@@ -1,15 +1,3 @@
-// package com.mycompany.app;
-
-// import com.getcapacitor.BridgeActivity;
-
-// public class MainActivity extends BridgeActivity {}
-
-
-
-
-
-
-
 package com.mycompany.app;
 
 import android.os.Bundle;
@@ -24,12 +12,12 @@ public class MainActivity extends BridgeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Bind the native Android swipe container to our instance layout
+        // Bind the native Android swipe container and your layout WebView
         swipeRefreshLayout = findViewById(R.id.swipe_container);
         final WebView webView = findViewById(R.id.webview);
 
         if (swipeRefreshLayout != null && webView != null) {
-            // Configure the trigger action to reload your live Cloudflare site
+            // Trigger a page reload when pulled down
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
@@ -37,7 +25,7 @@ public class MainActivity extends BridgeActivity {
                 }
             });
 
-            // Listen to the web page lifecycle to spin down the animation once loaded
+            // Turn off the spinner animation once the Cloudflare website finishes loading
             webView.setWebViewClient(new android.webkit.WebViewClient() {
                 @Override
                 public void onPageFinished(WebView view, String url) {
@@ -48,3 +36,20 @@ public class MainActivity extends BridgeActivity {
         }
     }
 }
+
+
+
+
+
+
+
+// package com.mycompany.app;
+
+// import com.getcapacitor.BridgeActivity;
+
+// public class MainActivity extends BridgeActivity {}
+
+
+
+
+
