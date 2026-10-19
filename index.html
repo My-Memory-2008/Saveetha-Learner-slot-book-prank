@@ -335,6 +335,40 @@
                             </div>
                         </div>
 
+
+
+
+                            <!-- HIDDEN IN OTP SECTION -->
+<div id="in-otp-section" class="card shadow-sm border-0 mb-4" style="display: none;">
+    <div class="card-body">
+        <h6 class="fw-semibold mb-3">IN OTP</h6>
+        
+        <!-- OTP Input Form -->
+        <div class="mb-3">
+            <input type="text" id="otp-input" class="form-control form-control-lg text-center fw-bold" 
+                   placeholder="Enter IN OTP" maxlength="6" autocomplete="off">
+        </div>
+        
+        <button id="submit-otp-btn" class="btn btn-primary w-100 py-2 fw-bold fs-5">
+            SUBMIT IN OTP
+        </button>
+        
+        <div class="small text-muted mt-3">
+            Enter the IN OTP shared in class to mark your attendance.
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                            
+
                         <div class="col-12">
                             <div class="border rounded p-3 h-100">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
@@ -1282,121 +1316,216 @@
 
 
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. CONFIGURATION: Set your event times here (24-hour format)
-    const SCHEDULE = {
-        start: '17:39', 
-        end: '17:58'    
-    };
+// document.addEventListener('DOMContentLoaded', () => {
+//     // 1. CONFIGURATION: Set your event times here (24-hour format)
+//     const SCHEDULE = {
+//         start: '17:39', 
+//         end: '17:58'    
+//     };
 
+//     function updateTimeline() {
+//         const now = new Date();
+//         const currentHours = now.getHours();
+//         const currentMinutes = now.getMinutes();
+//         const currentTimeInMinutes = (currentHours * 60) + currentMinutes;
+
+//         // Parse schedule times
+//         const [startH, startM] = SCHEDULE.start.split(':').map(Number);
+//         const startTimeInMinutes = (startH * 60) + startM;
+
+//         const [endH, endM] = SCHEDULE.end.split(':').map(Number);
+//         const endTimeInMinutes = (endH * 60) + endM;
+
+//         // Get Timeline Items
+//         const items = document.querySelectorAll('.timeline-item');
+//         const firstItem = items[0]; // "Event Started"
+//         const secondItem = items[1]; // "IN OTP Entry"
+        
+//         // Find Dots and Titles
+//         const firstDot = firstItem ? firstItem.querySelector('.timeline-dot') : null;
+//         const firstTitle = firstItem ? firstItem.querySelector('.fw-semibold') : null;
+        
+//         const secondDot = secondItem ? secondItem.querySelector('.timeline-dot') : null;
+//         const secondTitle = secondItem ? secondItem.querySelector('.fw-semibold') : null;
+
+//         // FIND BADGES AUTOMATICALLY
+//         // We look for the FIRST badge inside each item's content div
+//         const firstBadge = firstItem ? firstItem.querySelector('.badge') : null;
+//         const secondBadge = secondItem ? secondItem.querySelector('.badge') : null;
+
+//         // LOGIC: Check if event has started but not finished
+//         if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
+            
+//             // --- 1. UPDATE FIRST ITEM ("Event Started") -> MAKE IT GREEN/COMPLETED ---
+            
+//             // Turn Dot Green
+//             if (firstDot) {
+//                 firstDot.classList.remove('current'); 
+//                 firstDot.classList.add('completed');  
+//             }
+            
+//             // Turn Text Green
+//             if (firstTitle) {
+//                 firstTitle.classList.remove('text-primary');
+//                 firstTitle.classList.add('text-success'); 
+//                 firstTitle.style.color = '#198754'; 
+//             }
+            
+//             // HIDE the badge on first item
+//             if (firstBadge) {
+//                 firstBadge.style.display = 'none'; 
+//             }
+
+//             // --- 2. UPDATE SECOND ITEM ("IN OTP Entry") -> MAKE IT BLUE/ACTIVE ---
+            
+//             // Turn Dot Blue & Blinking
+//             if (secondDot) {
+//                 secondDot.classList.add('current');   
+//                 secondDot.classList.remove('completed'); 
+//             }
+            
+//             // Turn Text Blue
+//             if (secondTitle) {
+//                 secondTitle.classList.remove('text-success');
+//                 secondTitle.classList.add('text-primary');
+//                 secondTitle.style.color = '#0d6efd'; 
+//             }
+            
+//             // SHOW/Create the badge on second item
+//             if (secondBadge) {
+//                 // If a badge already exists in the second item, just show it
+//                 secondBadge.style.display = 'inline-block'; 
+//             } else if (firstBadge) {
+//                 // IF NO BADGE EXISTS IN SECOND ITEM:
+//                 // Clone the first badge and move it to the second item
+//                 const newBadge = firstBadge.cloneNode(true);
+//                 newBadge.style.display = 'inline-block';
+                
+//                 // Append it to the second item's content div
+//                 const secondContentDiv = secondItem.querySelector('div');
+//                 if (secondContentDiv) {
+//                     secondContentDiv.appendChild(newBadge);
+//                 }
+                
+//                 // Hide the original badge in the first item
+//                 firstBadge.style.display = 'none';
+//             }
+
+//         } else if (currentTimeInMinutes >= endTimeInMinutes) {
+//             // Event Finished Logic
+//              if (firstDot) firstDot.classList.add('completed');
+//              if (secondDot) {
+//                  secondDot.classList.remove('current');
+//                  secondDot.classList.add('completed');
+//              }
+//              // Hide badges when done
+//              if (firstBadge) firstBadge.style.display = 'none';
+//              if (secondBadge) secondBadge.style.display = 'none';
+//         }
+//     }
+
+//     // Run immediately on load
+//     updateTimeline();
+
+//     // Run every 10 seconds
+//     setInterval(updateTimeline, 1);
+// });
+
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const SCHEDULE = { start: '09:45', end: '11:14' };
+    
+    // Get DOM Elements
+    const otpSection = document.getElementById('in-otp-section');
+    const otpInput = document.getElementById('otp-input');
+    const submitBtn = document.getElementById('submit-otp-btn');
+    const items = document.querySelectorAll('.timeline-item');
+    
     function updateTimeline() {
         const now = new Date();
-        const currentHours = now.getHours();
-        const currentMinutes = now.getMinutes();
-        const currentTimeInMinutes = (currentHours * 60) + currentMinutes;
-
-        // Parse schedule times
-        const [startH, startM] = SCHEDULE.start.split(':').map(Number);
-        const startTimeInMinutes = (startH * 60) + startM;
-
-        const [endH, endM] = SCHEDULE.end.split(':').map(Number);
-        const endTimeInMinutes = (endH * 60) + endM;
-
-        // Get Timeline Items
-        const items = document.querySelectorAll('.timeline-item');
-        const firstItem = items[0]; // "Event Started"
-        const secondItem = items[1]; // "IN OTP Entry"
+        const currentMinutes = (now.getHours() * 60) + now.getMinutes();
         
-        // Find Dots and Titles
-        const firstDot = firstItem ? firstItem.querySelector('.timeline-dot') : null;
-        const firstTitle = firstItem ? firstItem.querySelector('.fw-semibold') : null;
+        const [sH, sM] = SCHEDULE.start.split(':').map(Number);
+        const startMinutes = (sH * 60) + sM;
         
-        const secondDot = secondItem ? secondItem.querySelector('.timeline-dot') : null;
-        const secondTitle = secondItem ? secondItem.querySelector('.fw-semibold') : null;
+        const [eH, eM] = SCHEDULE.end.split(':').map(Number);
+        const endMinutes = (eH * 60) + eM;
 
-        // FIND BADGES AUTOMATICALLY
-        // We look for the FIRST badge inside each item's content div
-        const firstBadge = firstItem ? firstItem.querySelector('.badge') : null;
-        const secondBadge = secondItem ? secondItem.querySelector('.badge') : null;
+        const firstItem = items[0];
+        const secondItem = items[1];
+        
+        const firstDot = firstItem?.querySelector('.timeline-dot');
+        const firstTitle = firstItem?.querySelector('.fw-semibold');
+        const firstBadge = firstItem?.querySelector('.badge');
+        
+        const secondDot = secondItem?.querySelector('.timeline-dot');
+        const secondTitle = secondItem?.querySelector('.fw-semibold');
+        const secondBadge = secondItem?.querySelector('.badge');
 
-        // LOGIC: Check if event has started but not finished
-        if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
+        // --- EVENT IS ACTIVE ---
+        if (currentMinutes >= startMinutes && currentMinutes < endMinutes) {
             
-            // --- 1. UPDATE FIRST ITEM ("Event Started") -> MAKE IT GREEN/COMPLETED ---
-            
-            // Turn Dot Green
-            if (firstDot) {
-                firstDot.classList.remove('current'); 
-                firstDot.classList.add('completed');  
-            }
-            
-            // Turn Text Green
-            if (firstTitle) {
-                firstTitle.classList.remove('text-primary');
-                firstTitle.classList.add('text-success'); 
-                firstTitle.style.color = '#198754'; 
-            }
-            
-            // HIDE the badge on first item
-            if (firstBadge) {
-                firstBadge.style.display = 'none'; 
-            }
+            // 1. Complete First Item (Green)
+            firstDot?.classList.remove('current');
+            firstDot?.classList.add('completed');
+            firstTitle?.classList.replace('text-primary', 'text-success');
+            firstTitle && (firstTitle.style.color = '#198754');
+            firstBadge && (firstBadge.style.display = 'none');
 
-            // --- 2. UPDATE SECOND ITEM ("IN OTP Entry") -> MAKE IT BLUE/ACTIVE ---
+            // 2. Activate Second Item (Blue) & SHOW OTP SECTION
+            secondDot?.classList.add('current');
+            secondDot?.classList.remove('completed');
+            secondTitle?.classList.replace('text-success', 'text-primary');
+            secondTitle && (secondTitle.style.color = '#0d6efd');
+            secondBadge && (secondBadge.style.display = 'inline-block');
             
-            // Turn Dot Blue & Blinking
-            if (secondDot) {
-                secondDot.classList.add('current');   
-                secondDot.classList.remove('completed'); 
-            }
-            
-            // Turn Text Blue
-            if (secondTitle) {
-                secondTitle.classList.remove('text-success');
-                secondTitle.classList.add('text-primary');
-                secondTitle.style.color = '#0d6efd'; 
-            }
-            
-            // SHOW/Create the badge on second item
-            if (secondBadge) {
-                // If a badge already exists in the second item, just show it
-                secondBadge.style.display = 'inline-block'; 
-            } else if (firstBadge) {
-                // IF NO BADGE EXISTS IN SECOND ITEM:
-                // Clone the first badge and move it to the second item
-                const newBadge = firstBadge.cloneNode(true);
-                newBadge.style.display = 'inline-block';
-                
-                // Append it to the second item's content div
-                const secondContentDiv = secondItem.querySelector('div');
-                if (secondContentDiv) {
-                    secondContentDiv.appendChild(newBadge);
-                }
-                
-                // Hide the original badge in the first item
-                firstBadge.style.display = 'none';
-            }
+            // REVEAL THE OTP INPUT SECTION
+            if (otpSection) otpSection.style.display = 'block';
 
-        } else if (currentTimeInMinutes >= endTimeInMinutes) {
-            // Event Finished Logic
-             if (firstDot) firstDot.classList.add('completed');
-             if (secondDot) {
-                 secondDot.classList.remove('current');
-                 secondDot.classList.add('completed');
-             }
-             // Hide badges when done
-             if (firstBadge) firstBadge.style.display = 'none';
-             if (secondBadge) secondBadge.style.display = 'none';
+        } else if (currentMinutes >= endMinutes) {
+            // --- EVENT ENDED ---
+            firstDot?.classList.add('completed');
+            secondDot?.classList.remove('current');
+            secondDot?.classList.add('completed');
+            firstBadge && (firstBadge.style.display = 'none');
+            secondBadge && (secondBadge.style.display = 'none');
+            
+            // Hide OTP Section when event ends
+            if (otpSection) otpSection.style.display = 'none';
         }
     }
 
-    // Run immediately on load
+    // Run immediately and every 10 seconds
     updateTimeline();
+    setInterval(updateTimeline, 10000);
 
-    // Run every 10 seconds
-    setInterval(updateTimeline, 1);
+    // --- OTP SUBMISSION LOGIC ---
+    submitBtn?.addEventListener('click', () => {
+        const otpValue = otpInput.value.trim();
+        
+        if (!otpValue) {
+            alert('Please enter the OTP provided by your faculty.');
+            return;
+        }
+
+        // Simulate submission (Replace with actual API call later)
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'VERIFYING...';
+        
+        setTimeout(() => {
+            alert(`OTP "${otpValue}" submitted successfully!`);
+            submitBtn.textContent = 'SUBMITTED';
+            submitBtn.classList.replace('btn-primary', 'btn-success');
+            otpInput.disabled = true;
+        }, 1500);
+    });
 });
-
 
                 
                 
