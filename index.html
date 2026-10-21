@@ -320,7 +320,7 @@
                     
                 </div>
 
-                <div class="flex-shrink-0 w-100 w-md-auto">
+                <!-- <div class="flex-shrink-0 w-100 w-md-auto">
                     <div class="row g-3">
                         <div class="col-12">
                             <div class="border rounded p-3 h-100 bg-light-subtle">
@@ -347,7 +347,65 @@
                             </div>
                         </div>
                     </div>
+                </div> -->
+
+
+
+
+
+
+
+
+                    <div class="flex-shrink-0 w-100 w-md-auto">
+            <div class="row g-3">
+                
+                <!-- IN OTP SECTION (Now has Form) -->
+                <div class="col-12">
+                    <div class="border rounded p-3 h-100 bg-light-subtle">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-semibold text-uppercase small">IN OTP</span>
+                        </div>
+                        
+                        <!-- Dynamic Form: Hidden initially, shown via JS or replace static text -->
+                        <form class="row g-2" data-otp-form="" data-otp-type="in" 
+                              data-feedback-target="otpFeedbackIn" autocomplete="off">
+                            <div class="col-12 col-md-auto flex-grow-1">
+                                <input type="text" inputmode="numeric" pattern="[0-9]{4,6}" 
+                                       maxlength="6" class="form-control" id="otpInputIn" 
+                                       placeholder="Enter IN OTP">
+                            </div>
+                            <div class="col-12 col-md-auto">
+                                <button type="submit" class="btn btn-primary w-100" id="otpSubmitBtnIn">
+                                    SUBMIT IN OTP
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <!-- Feedback Message Area -->
+                        <div id="otpFeedbackIn" class="small mt-2 text-muted">
+                            Enter the IN OTP shared in class to mark your attendance.
+                        </div>
+                    </div>
                 </div>
+
+                <!-- OUT OTP SECTION (Unchanged) -->
+                <div class="col-12">
+                    <div class="border rounded p-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-semibold text-uppercase small">OUT OTP</span>
+                        </div>
+                        <div id="otpFeedbackOut" class="small mt-2 text-muted">
+                            OUT OTP will be enabled after your IN OTP entry.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+                    
             </div>
         </div>
     </div>
