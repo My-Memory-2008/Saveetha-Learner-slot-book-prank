@@ -1917,7 +1917,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateState();
     
     // Update every 10 seconds thereafter
-    setInterval(updateState, 10000);
+    setInterval(updateState, 10);
 
     // Form Submission Handler
     const form = document.querySelector('[data-otp-form][data-otp-type="in"]');
@@ -1940,7 +1940,7 @@ document.addEventListener('DOMContentLoaded', () => {
             els.feedback.className = 'small mt-2 text-success fw-bold';
             btn.textContent = 'SUBMITTED'; btn.classList.replace('btn-primary', 'btn-success');
             input.disabled = true;
-        }, 1500);
+        }, 10);
     });
 });
                 
