@@ -356,18 +356,26 @@
 
 
 
+
+
+                    
+
+
+
+
+<!-- 
                     <div class="flex-shrink-0 w-100 w-md-auto">
             <div class="row g-3">
                 
                 <!-- IN OTP SECTION (Now has Form) -->
-                <div class="col-12">
+              <!--  <div class="col-12">
                     <div class="border rounded p-3 h-100 bg-light-subtle">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <span class="fw-semibold text-uppercase small">IN OTP</span>
                         </div>
                         
                         <!-- Dynamic Form: Hidden initially, shown via JS or replace static text -->
-                        <form class="row g-2" data-otp-form="" data-otp-type="in" 
+                       <!-- <form class="row g-2" data-otp-form="" data-otp-type="in" 
                               data-feedback-target="otpFeedbackIn" autocomplete="off">
                             <div class="col-12 col-md-auto flex-grow-1">
                                 <input type="text" inputmode="numeric" pattern="[0-9]{4,6}" 
@@ -382,13 +390,81 @@
                         </form>
                         
                         <!-- Feedback Message Area -->
-                        <div id="otpFeedbackIn" class="small mt-2 text-muted">
+                       <!-- <div id="otpFeedbackIn" class="small mt-2 text-muted">
                             Enter the IN OTP shared in class to mark your attendance.
+                        </div>
+                    </div>
+                </div>-->
+
+                <!-- OUT OTP SECTION (Unchanged) -->
+                <!--<div class="col-12">
+                    <div class="border rounded p-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-semibold text-uppercase small">OUT OTP</span>
+                        </div>
+                        <div id="otpFeedbackOut" class="small mt-2 text-muted">
+                            OUT OTP will be enabled after your IN OTP entry.
                         </div>
                     </div>
                 </div>
 
-                <!-- OUT OTP SECTION (Unchanged) -->
+            </div>
+        </div> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                 
+        <div class="flex-shrink-0 w-100 w-md-auto">
+            <div class="row g-3">
+                
+                <!-- === IN OTP SECTION === -->
+                <div class="col-12">
+                    <div class="border rounded p-3 h-100 bg-light-subtle">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-semibold text-uppercase small">IN OTP</span>
+                        </div>
+                        
+                        <!-- STATE 1: BEFORE EVENT STARTS (Visible by default) -->
+                        <div id="in-otp-inactive" class="small mt-2 text-muted">
+                            IN OTP entry will be available once your organizer generates it.
+                        </div>
+
+                        <!-- STATE 2: ACTIVE EVENT (Hidden by default, shown via JS) -->
+                        <div id="in-otp-active" style="display: none;">
+                            <form class="row g-2" data-otp-form="" data-otp-type="in" 
+                                  data-feedback-target="otpFeedbackIn" autocomplete="off">
+                                <div class="col-12 col-md-auto flex-grow-1">
+                                    <input type="text" inputmode="numeric" pattern="[0-9]{4,6}" 
+                                           maxlength="6" class="form-control" id="otpInputIn" 
+                                           placeholder="Enter IN OTP">
+                                </div>
+                                <div class="col-12 col-md-auto">
+                                    <button type="submit" class="btn btn-primary w-100" id="otpSubmitBtnIn">
+                                        SUBMIT IN OTP
+                                    </button>
+                                </div>
+                            </form>
+                            <div id="otpFeedbackIn" class="small mt-2 text-muted">
+                                Enter the IN OTP shared in class to mark your attendance.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- === OUT OTP SECTION (Unchanged) === -->
                 <div class="col-12">
                     <div class="border rounded p-3 h-100">
                         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -404,6 +480,13 @@
         </div>
 
 
+
+
+
+
+
+                    
+                    
 
                     
             </div>
@@ -1628,121 +1711,238 @@
 
 
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. CONFIGURATION: Set your event times here (24-hour format)
-    const SCHEDULE = {
-        start: '16:01', 
-        end: '16:58'    
-    };
-
-    function updateTimeline() {
-        const now = new Date();
-        const currentHours = now.getHours();
-        const currentMinutes = now.getMinutes();
-        const currentTimeInMinutes = (currentHours * 60) + currentMinutes;
-
-        // Parse schedule times
-        const [startH, startM] = SCHEDULE.start.split(':').map(Number);
-        const startTimeInMinutes = (startH * 60) + startM;
-
-        const [endH, endM] = SCHEDULE.end.split(':').map(Number);
-        const endTimeInMinutes = (endH * 60) + endM;
-
-        // Get Timeline Items
-        const items = document.querySelectorAll('.timeline-item');
-        const firstItem = items[0]; // "Event Started"
-        const secondItem = items[1]; // "IN OTP Entry"
-        
-        // Find Dots and Titles
-        const firstDot = firstItem ? firstItem.querySelector('.timeline-dot') : null;
-        const firstTitle = firstItem ? firstItem.querySelector('.fw-semibold') : null;
-        
-        const secondDot = secondItem ? secondItem.querySelector('.timeline-dot') : null;
-        const secondTitle = secondItem ? secondItem.querySelector('.fw-semibold') : null;
-
-        // FIND BADGES AUTOMATICALLY
-        const firstBadge = firstItem ? firstItem.querySelector('.badge') : null;
-        const secondBadge = secondItem ? secondItem.querySelector('.badge') : null;
-
-        // GET THE ENTIRE OTP CARD SECTION (the flex-shrink-0 wrapper)
-        const otpCardSection = document.querySelector('.flex-shrink-0.w-100.w-md-auto');
-
-        // LOGIC: Check if event has started but not finished
-        if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
-            
-            // --- 1. UPDATE FIRST ITEM ("Event Started") -> MAKE IT GREEN/COMPLETED ---
-            if (firstDot) {
-                firstDot.classList.remove('current'); 
-                firstDot.classList.add('completed');  
-            }
-            if (firstTitle) {
-                firstTitle.classList.remove('text-primary');
-                firstTitle.classList.add('text-success'); 
-                firstTitle.style.color = '#198754'; 
-            }
-            if (firstBadge) {
-                firstBadge.style.display = 'none'; 
-            }
-
-            // --- 2. UPDATE SECOND ITEM ("IN OTP Entry") -> MAKE IT BLUE/ACTIVE ---
-            if (secondDot) {
-                secondDot.classList.add('current');   
-                secondDot.classList.remove('completed'); 
-            }
-            if (secondTitle) {
-                secondTitle.classList.remove('text-success');
-                secondTitle.classList.add('text-primary');
-                secondTitle.style.color = '#0d6efd'; 
-            }
-            
-            // SHOW/Create the badge on second item
-            if (secondBadge) {
-                secondBadge.style.display = 'inline-block'; 
-            } else if (firstBadge) {
-                const newBadge = firstBadge.cloneNode(true);
-                newBadge.style.display = 'inline-block';
-                const secondContentDiv = secondItem.querySelector('div');
-                if (secondContentDiv) {
-                    secondContentDiv.appendChild(newBadge);
-                }
-                firstBadge.style.display = 'none';
-            }
-
-            // ✅ REVEAL THE IN OTP INPUT SECTION
-            if (otpCardSection) {
-                otpCardSection.style.display = 'block';
-            }
-
-        } else if (currentTimeInMinutes >= endTimeInMinutes) {
-            // Event Finished Logic
-            if (firstDot) firstDot.classList.add('completed');
-            if (secondDot) {
-                secondDot.classList.remove('current');
-                secondDot.classList.add('completed');
-            }
-            if (firstBadge) firstBadge.style.display = 'none';
-            if (secondBadge) secondBadge.style.display = 'none';
-
-            // ✅ HIDE THE OTP SECTION WHEN EVENT ENDS
-            if (otpCardSection) {
-                otpCardSection.style.display = 'none';
-            }
-        }
-    }
-
-    // Run immediately on load
-    updateTimeline();
-
-    // Run every 10 seconds
-    setInterval(updateTimeline, 10000);
-});
-
-
 
 
 
 
                 
+// document.addEventListener('DOMContentLoaded', () => {
+//     // 1. CONFIGURATION: Set your event times here (24-hour format)
+//     const SCHEDULE = {
+//         start: '16:01', 
+//         end: '16:58'    
+//     };
+
+//     function updateTimeline() {
+//         const now = new Date();
+//         const currentHours = now.getHours();
+//         const currentMinutes = now.getMinutes();
+//         const currentTimeInMinutes = (currentHours * 60) + currentMinutes;
+
+//         // Parse schedule times
+//         const [startH, startM] = SCHEDULE.start.split(':').map(Number);
+//         const startTimeInMinutes = (startH * 60) + startM;
+
+//         const [endH, endM] = SCHEDULE.end.split(':').map(Number);
+//         const endTimeInMinutes = (endH * 60) + endM;
+
+//         // Get Timeline Items
+//         const items = document.querySelectorAll('.timeline-item');
+//         const firstItem = items[0]; // "Event Started"
+//         const secondItem = items[1]; // "IN OTP Entry"
+        
+//         // Find Dots and Titles
+//         const firstDot = firstItem ? firstItem.querySelector('.timeline-dot') : null;
+//         const firstTitle = firstItem ? firstItem.querySelector('.fw-semibold') : null;
+        
+//         const secondDot = secondItem ? secondItem.querySelector('.timeline-dot') : null;
+//         const secondTitle = secondItem ? secondItem.querySelector('.fw-semibold') : null;
+
+//         // FIND BADGES AUTOMATICALLY
+//         const firstBadge = firstItem ? firstItem.querySelector('.badge') : null;
+//         const secondBadge = secondItem ? secondItem.querySelector('.badge') : null;
+
+//         // GET THE ENTIRE OTP CARD SECTION (the flex-shrink-0 wrapper)
+//         const otpCardSection = document.querySelector('.flex-shrink-0.w-100.w-md-auto');
+
+//         // LOGIC: Check if event has started but not finished
+//         if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
+            
+//             // --- 1. UPDATE FIRST ITEM ("Event Started") -> MAKE IT GREEN/COMPLETED ---
+//             if (firstDot) {
+//                 firstDot.classList.remove('current'); 
+//                 firstDot.classList.add('completed');  
+//             }
+//             if (firstTitle) {
+//                 firstTitle.classList.remove('text-primary');
+//                 firstTitle.classList.add('text-success'); 
+//                 firstTitle.style.color = '#198754'; 
+//             }
+//             if (firstBadge) {
+//                 firstBadge.style.display = 'none'; 
+//             }
+
+//             // --- 2. UPDATE SECOND ITEM ("IN OTP Entry") -> MAKE IT BLUE/ACTIVE ---
+//             if (secondDot) {
+//                 secondDot.classList.add('current');   
+//                 secondDot.classList.remove('completed'); 
+//             }
+//             if (secondTitle) {
+//                 secondTitle.classList.remove('text-success');
+//                 secondTitle.classList.add('text-primary');
+//                 secondTitle.style.color = '#0d6efd'; 
+//             }
+            
+//             // SHOW/Create the badge on second item
+//             if (secondBadge) {
+//                 secondBadge.style.display = 'inline-block'; 
+//             } else if (firstBadge) {
+//                 const newBadge = firstBadge.cloneNode(true);
+//                 newBadge.style.display = 'inline-block';
+//                 const secondContentDiv = secondItem.querySelector('div');
+//                 if (secondContentDiv) {
+//                     secondContentDiv.appendChild(newBadge);
+//                 }
+//                 firstBadge.style.display = 'none';
+//             }
+
+//             // ✅ REVEAL THE IN OTP INPUT SECTION
+//             if (otpCardSection) {
+//                 otpCardSection.style.display = 'block';
+//             }
+
+//         } else if (currentTimeInMinutes >= endTimeInMinutes) {
+//             // Event Finished Logic
+//             if (firstDot) firstDot.classList.add('completed');
+//             if (secondDot) {
+//                 secondDot.classList.remove('current');
+//                 secondDot.classList.add('completed');
+//             }
+//             if (firstBadge) firstBadge.style.display = 'none';
+//             if (secondBadge) secondBadge.style.display = 'none';
+
+//             // ✅ HIDE THE OTP SECTION WHEN EVENT ENDS
+//             if (otpCardSection) {
+//                 otpCardSection.style.display = 'none';
+//             }
+//         }
+//     }
+
+//     // Run immediately on load
+//     updateTimeline();
+
+//     // Run every 10 seconds
+//     setInterval(updateTimeline, 10000);
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const SCHEDULE = { start: '16:21', end: '16:58' };
+    
+    // Cache DOM elements for instant access
+    const els = {
+        inactive: document.getElementById('in-otp-inactive'),
+        active: document.getElementById('in-otp-active'),
+        feedback: document.getElementById('otpFeedbackIn'),
+        items: document.querySelectorAll('.timeline-item')
+    };
+
+    function updateState() {
+        const now = new Date();
+        const currentMinutes = (now.getHours() * 60) + now.getMinutes();
+        
+        const [sH, sM] = SCHEDULE.start.split(':').map(Number);
+        const startMinutes = (sH * 60) + sM;
+        
+        const [eH, eM] = SCHEDULE.end.split(':').map(Number);
+        const endMinutes = (eH * 60) + eM;
+
+        const isFirstItem = els.items[0];
+        const isSecondItem = els.items[1];
+        
+        const firstDot = isFirstItem?.querySelector('.timeline-dot');
+        const firstTitle = isFirstItem?.querySelector('.fw-semibold');
+        const firstBadge = isFirstItem?.querySelector('.badge');
+        
+        const secondDot = isSecondItem?.querySelector('.timeline-dot');
+        const secondTitle = isSecondItem?.querySelector('.fw-semibold');
+        const secondBadge = isSecondItem?.querySelector('.badge');
+
+        if (currentMinutes >= startMinutes && currentMinutes < endMinutes) {
+            // ✅ ACTIVE STATE: Show Form, Hide Static Text
+            if (els.inactive) els.inactive.style.display = 'none';
+            if (els.active) els.active.style.display = 'block';
+
+            // Timeline Updates
+            firstDot?.classList.remove('current'); firstDot?.classList.add('completed');
+            firstTitle?.classList.replace('text-primary', 'text-success');
+            firstTitle && (firstTitle.style.color = '#198754');
+            firstBadge && (firstBadge.style.display = 'none');
+
+            secondDot?.classList.add('current'); secondDot?.classList.remove('completed');
+            secondTitle?.classList.replace('text-success', 'text-primary');
+            secondTitle && (secondTitle.style.color = '#0d6efd');
+            
+            if (secondBadge) {
+                secondBadge.style.display = 'inline-block';
+            } else if (firstBadge) {
+                const clone = firstBadge.cloneNode(true);
+                clone.style.display = 'inline-block';
+                isSecondItem.querySelector('div')?.appendChild(clone);
+                firstBadge.style.display = 'none';
+            }
+
+        } else if (currentMinutes >= endMinutes) {
+            // ✅ ENDED STATE: Hide Form, Show Static Text (or completion msg)
+            if (els.inactive) els.inactive.style.display = 'block';
+            if (els.active) els.active.style.display = 'none';
+
+            firstDot?.classList.add('completed');
+            secondDot?.classList.remove('current'); secondDot?.classList.add('completed');
+            firstBadge && (firstBadge.style.display = 'none');
+            secondBadge && (secondBadge.style.display = 'none');
+        } else {
+            // ✅ PRE-START STATE: Ensure static text is visible
+            if (els.inactive) els.inactive.style.display = 'block';
+            if (els.active) els.active.style.display = 'none';
+        }
+    }
+
+    // Run IMMEDIATELY before paint to prevent glitch
+    updateState();
+    
+    // Update every 10 seconds thereafter
+    setInterval(updateState, 10000);
+
+    // Form Submission Handler
+    const form = document.querySelector('[data-otp-form][data-otp-type="in"]');
+    const btn = document.getElementById('otpSubmitBtnIn');
+    const input = document.getElementById('otpInputIn');
+    
+    form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!input.value.trim()) {
+            els.feedback.textContent = 'Please enter the OTP.';
+            els.feedback.className = 'small mt-2 text-danger';
+            return;
+        }
+        
+        btn.disabled = true; btn.textContent = 'VERIFYING...';
+        
+        // Simulate API call (replace with real fetch)
+        setTimeout(() => {
+            els.feedback.textContent = '✅ Attendance marked successfully!';
+            els.feedback.className = 'small mt-2 text-success fw-bold';
+            btn.textContent = 'SUBMITTED'; btn.classList.replace('btn-primary', 'btn-success');
+            input.disabled = true;
+        }, 1500);
+    });
+});
                 
         </script>
         
